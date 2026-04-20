@@ -1,4 +1,24 @@
 const express = require('express');
+const ytdl = require('ytdl-core');
+const app = express();
+
+app.get('/video', async (req, res) => {
+    try {
+        const url = req.query.url;
+        // Fetch the video on the SERVER side
+        res.header('Content-Type', 'video/mp4');
+        ytdl(url, { quality: 'highestvideo' }).pipe(res);
+    } catch (e) {
+        res.status(500).send("Source restricted.");
+    }
+});
+
+app.get('/', (req, res) => {
+    res.send('<h1>Data Research Portal</h1><input id="v" placeholder="URL"><button onclick="window.location=\'/video?url=\'+document.getElementById(\'v\').value">Analyze</button>');
+});
+
+app.listen(process.env.PORT || 8080);
+const express = require('express');
 const Unblocker = require('unblocker');
 const app = express();
 
